@@ -183,12 +183,20 @@
 /**
  The dispatch queue for `completionBlock`. If `NULL` (default), the main queue is used.
  */
+#ifdef APPORTABLE
+@property (nonatomic, assign) dispatch_queue_t completionQueue;
+#else
 @property (nonatomic, strong) dispatch_queue_t completionQueue;
+#endif
 
 /**
  The dispatch group for `completionBlock`. If `NULL` (default), a private dispatch group is used.
  */
+#ifdef APPORTABLE
+@property (nonatomic, assign) dispatch_group_t completionGroup;
+#else
 @property (nonatomic, strong) dispatch_group_t completionGroup;
+#endif
 
 ///---------------------------------------------
 /// @name Managing Request Operation Information

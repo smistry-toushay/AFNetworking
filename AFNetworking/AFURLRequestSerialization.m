@@ -203,11 +203,13 @@ NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 #endif
 #pragma clang diagnostic pop
     if (userAgent) {
+#ifndef APPORTABLE
         if (![userAgent canBeConvertedToEncoding:NSASCIIStringEncoding]) {
             NSMutableString *mutableUserAgent = [userAgent mutableCopy];
             CFStringTransform((__bridge CFMutableStringRef)(mutableUserAgent), NULL, kCFStringTransformToLatin, false);
             userAgent = mutableUserAgent;
         }
+#endif
         [self setValue:userAgent forHTTPHeaderField:@"User-Agent"];
     }
 

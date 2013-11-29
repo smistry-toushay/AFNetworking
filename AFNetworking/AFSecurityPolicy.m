@@ -43,6 +43,9 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 }
 
 static id AFPublicKeyForCertificate(NSData *certificate) {
+#ifdef APPORTABLE
+    return nil;
+#else
     SecCertificateRef allowedCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certificate);
     NSCParameterAssert(allowedCertificate);
 
@@ -67,13 +70,18 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     CFRelease(allowedCertificate);
 
     return (__bridge_transfer id)allowedPublicKey;
+#endif
 }
 
 static BOOL AFServerTrustIsValid(SecTrustRef serverTrust) {
+#ifdef APPORTABLE
+    return YES;
+#else
     SecTrustResultType result = 0;
     OSStatus status = SecTrustEvaluate(serverTrust, &result);
     NSCAssert(status == errSecSuccess, @"SecTrustEvaluate error: %ld", (long int)status);
     return (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed);
+#endif
 }
 
 static NSArray * AFCertificateTrustChainForServerTrust(SecTrustRef serverTrust) {
@@ -89,6 +97,9 @@ static NSArray * AFCertificateTrustChainForServerTrust(SecTrustRef serverTrust) 
 }
 
 static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
+#ifdef APPORTABLE
+    return nil;
+#else
     SecPolicyRef policy = SecPolicyCreateBasicX509();
     CFIndex certificateCount = SecTrustGetCertificateCount(serverTrust);
     NSMutableArray *trustChain = [NSMutableArray arrayWithCapacity:(NSUInteger)certificateCount];
@@ -115,6 +126,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     CFRelease(policy);
     
     return [NSArray arrayWithArray:trustChain];
+#endif
 }
 
 #pragma mark -

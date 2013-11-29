@@ -455,11 +455,13 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 
     if (!imageRef) {
         UIImage *image = AFImageWithDataAtScale(data, scale);
+#ifndef APPORTABLE
         if (image.images) {
             CGDataProviderRelease(dataProvider);
 
             return image;
         }
+#endif
 
         imageRef = CGImageCreateCopy([image CGImage]);
     }

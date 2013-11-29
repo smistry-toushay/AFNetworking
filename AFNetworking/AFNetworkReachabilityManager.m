@@ -211,6 +211,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 
 #pragma mark - NSKeyValueObserving
 
+#ifndef APPORTABLE
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
     if ([key isEqualToString:@"reachable"] || [key isEqualToString:@"reachableViaWWAN"] || [key isEqualToString:@"reachableViaWiFi"]) {
         return [NSSet setWithObject:@"networkReachabilityStatus"];
@@ -218,5 +219,6 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 
     return [super keyPathsForValuesAffectingValueForKey:key];
 }
+#endif
 
 @end
